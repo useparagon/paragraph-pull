@@ -1,0 +1,107 @@
+name: 'Paragraph Pull Runner'
+description: 'Pulls updated code from paragon and sync with github branch'
+inputs:
+  projectId:
+    type: string
+    required: true
+  commitId:
+    type: string
+    required: true
+  paragonKey:
+    type: string
+    required: true
+  npmToken:
+    type: string
+    required: true
+  paragonZeusUrl:
+    type: string
+    required: true
+  paragonDashboardUrl:
+    type: string
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate Inputs
+      id: validate
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.projectId }}" ]; then
+          echo "projectId is not provided."
+          exit 1
+        fi
+          
+        if [ -z "${{ inputs.commitId }}" ]; then
+          echo "commitId is not provided."
+          exit 1
+        fi 
+
+        if [ -z "${{ inputs.paragonKey }}" ]; then
+          echo "paragonKey is not provided."
+          exit 1
+        fi 
+
+        if [ -z "${{ inputs.npmToken }}" ]; then
+          echo "npmToken is not provided."
+          exit 1
+        fi 
+
+        if [ -z "${{ inputs.paragonZeusUrl }}" ]; then
+          echo "paragonZeusUrl is not provided."
+          exit 1
+        fi 
+
+        if [ -z "${{ inputs.paragonDashboardUrl }}" ]; then
+          echo "paragonDashboardUrl is not provided."
+          exit 1
+        fi
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v4.0.1
+      with:
+        node-version: v18.17.1
+
+    - name: Install para CLI
+      shell: bash
+      run: |
+        echo "//registry.npmjs.org/:_authToken=${{ inputs.npmToken }}" > ~/.npmrc
+        npm install -g @useparagon/cli@0.0.1-canary.27
+
+    - name: Authenticate into CLI
+      env:
+        PARAGON_CLI_KEY: ${{ inputs.paragonKey }}
+        PARAGON_HOST_DASHBOARD: ${{ inputs.paragonDashboardUrl }}
+        PARAGON_HOST_ZEUS: ${{ inputs.paragonZeusUrl }}
+      shell: bash
+      run: |
+        mkdir -p ~/.paragon
+        cat << EOF > ~/.paragon/credentials.json
+        {
+          "default": {
+            "profile": "default",
+            "token": "$PARAGON_CLI_KEY"
+          }
+        }
+        EOF
+        cat << EOF > ~/.paragon/profiles.json
+        {
+          "default": {
+            "name": "default",
+            "default": true,
+            "services": {
+              "zeus": "$PARAGON_HOST_ZEUS",
+              "dashboard": "$PARAGON_HOST_DASHBOARD"
+            }
+          }
+        }
+        EOF
+
+    - name: Pull changes
+      shell: bash
+      run: para init --create-from-existing --auto-detect-project .
+
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: ⤵️ Sync changes from remote
