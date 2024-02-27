@@ -25,8 +25,6 @@ jobs:
   pull_from_paragon:
     name: Pull from Paragon
     runs-on: ubuntu-latest
-    container:
-      name: /paragraph_pull_runner.yml
 
     permissions:
       contents: write
@@ -47,13 +45,13 @@ jobs:
 Make sure to replace ${{ secrets.PARAGON_CLI_KEY }}, ${{ secrets.NPM_TOKEN }}, ${{ secrets.ZEUS_URL }}, and ${{ secrets.DASHBOARD_URL }} with your actual secrets.
 
 ## Inputs
-projectId
+- projectId
 Required. Paragon project ID.
 
-commitId
+- commitId
 Required. Paragon project commit ID.
 
 ## Permissions
 This action requires the following permissions:
 
-contents: Write permission to commit and push the changed files back to the repository.
+- contents: Write permission to commit and push the changed files back to the repository.
