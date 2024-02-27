@@ -1,6 +1,6 @@
 # Pull from Paragon GitHub Action
 
-This GitHub Action allows you to pull from a Paragon project using the Paragon CLI.
+This GitHub Action allows you to pull from a Paragon project using the Paragraph CLI.
 
 ## Usage
 Note: It is suggested to name the runner file as "**paragraph_pull_runner.yml**"
