@@ -118,7 +118,7 @@ runs:
       if: ${{ success() }}
       run: |
         echo "Commit succeeded!"
-        curl -X POST \
+        curl -X PATCH \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer $PARAGON_CLI_KEY" \
           -d "{ \"projectId\": \"$PROJECT_ID\", \"commitId\": \"$COMMIT_ID\", \"runId\": \"${{ github.run_id }}\", \"success\": true, \"hash\": \"${{ steps.commit.outputs.commit_hash }}\"  }" \
@@ -134,7 +134,7 @@ runs:
       if: ${{ failure() }}
       run: |
         echo "Commit failed!"
-        curl -X POST \
+        curl -X PATCH \
           -H "Content-Type: application/json" \
           -H "Authorization: Bearer $PARAGON_CLI_KEY" \
           -d "{ \"projectId\": \"$PROJECT_ID\", \"commitId\": \"$COMMIT_ID\", \"runId\": \"${{ github.run_id }}\", \"success\": false }" \
