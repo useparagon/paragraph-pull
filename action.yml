@@ -102,6 +102,40 @@ runs:
       run: para init --create-from-existing --auto-detect-project .
 
     - name: Commit changes
+      id: commit
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: ⤵️ Sync changes from remote
+
+    # Post steps
+    - name: Update success status in Paragon
+      shell: bash
+      env:
+        PARAGON_CLI_KEY: ${{ inputs.paragonKey }}
+        PARAGON_HOST_ZEUS: ${{ inputs.paragonZeusUrl }}
+        PROJECT_ID: ${{ inputs.projectId }}
+        COMMIT_ID: ${{ inputs.commitId }}
+      if: ${{ success() }}
+      run: |
+        echo "Commit succeeded!"
+        curl -X POST \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer $PARAGON_CLI_KEY" \
+          -d "{ \"projectId\": \"$PROJECT_ID\", \"commitId\": \"$COMMIT_ID\", \"runId\": \"${{ github.run_id }}\", \"success\": true, \"hash\": \"${{ steps.commit.outputs.commit_hash }}\"  }" \
+          $PARAGON_HOST_ZEUS/graphite/projects/commit
+
+    - name: Update failed status in Paragon
+      shell: bash
+      env:
+        PARAGON_CLI_KEY: ${{ inputs.paragonKey }}
+        PARAGON_HOST_ZEUS: ${{ inputs.paragonZeusUrl }}
+        PROJECT_ID: ${{ inputs.projectId }}
+        COMMIT_ID: ${{ inputs.commitId }}
+      if: ${{ failure() }}
+      run: |
+        echo "Commit failed!"
+        curl -X POST \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer $PARAGON_CLI_KEY" \
+          -d "{ \"projectId\": \"$PROJECT_ID\", \"commitId\": \"$COMMIT_ID\", \"runId\": \"${{ github.run_id }}\", \"success\": false }" \
+          $PARAGON_HOST_ZEUS/graphite/projects/commit
