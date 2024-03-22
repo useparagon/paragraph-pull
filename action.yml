@@ -10,9 +10,6 @@ inputs:
   paragonKey:
     type: string
     required: true
-  npmToken:
-    type: string
-    required: true
   paragonZeusUrl:
     type: string
     required: true
@@ -46,11 +43,6 @@ runs:
           exit 1
         fi 
 
-        if [ -z "${{ inputs.npmToken }}" ]; then
-          echo "npmToken is not provided."
-          exit 1
-        fi 
-
         if [ -z "${{ inputs.paragonZeusUrl }}" ]; then
           echo "paragonZeusUrl is not provided."
           exit 1
@@ -69,7 +61,6 @@ runs:
     - name: Install para CLI
       shell: bash
       run: |
-        echo "//registry.npmjs.org/:_authToken=${{ inputs.npmToken }}" > ~/.npmrc
         npm install -g @useparagon/cli@0.0.1-canary.36
 
     - name: Authenticate into CLI
