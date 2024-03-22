@@ -19,6 +19,10 @@ inputs:
   paragonDashboardUrl:
     type: string
     required: true
+  subfolder:
+    type: string
+    required: false
+    default: '.'
 
 runs:
   using: 'composite'
@@ -66,7 +70,7 @@ runs:
       shell: bash
       run: |
         echo "//registry.npmjs.org/:_authToken=${{ inputs.npmToken }}" > ~/.npmrc
-        npm install -g @useparagon/cli@0.0.1-canary.27
+        npm install -g @useparagon/cli@0.0.1-canary.36
 
     - name: Authenticate into CLI
       env:
@@ -99,7 +103,9 @@ runs:
 
     - name: Pull changes
       shell: bash
-      run: para init --create-from-existing --auto-detect-project .
+      run: |
+        cd ${{ inputs.subfolder }}
+        para init --create-from-existing --auto-detect-project .
 
     - name: Commit changes
       id: commit
