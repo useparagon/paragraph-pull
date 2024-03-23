@@ -1,5 +1,8 @@
 name: 'Paragraph Pull Runner'
-description: 'Pulls updated code from paragon and sync with github branch'
+description: 'Pulls updated code from Paragon to sync with GitHub.'
+branding:
+  icon: download-cloud
+  color: gray-dark
 inputs:
   projectId:
     type: string
