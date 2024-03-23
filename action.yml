@@ -105,7 +105,7 @@ runs:
       shell: bash
       run: |
         cd ${{ inputs.subfolder }}
-        para init --create-from-existing --auto-detect-project .
+        para pull
 
     - name: Commit changes
       id: commit
