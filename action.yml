@@ -12,10 +12,12 @@ inputs:
     required: true
   paragonZeusUrl:
     type: string
-    required: true
+    required: false
+    default: https://zeus.useparagon.com
   paragonDashboardUrl:
     type: string
-    required: true
+    required: false
+    default: https://dashboard.useparagon.com
   subfolder:
     type: string
     required: false
@@ -61,7 +63,7 @@ runs:
     - name: Install para CLI
       shell: bash
       run: |
-        npm install -g @useparagon/cli@0.0.1-canary.36
+        npm install -g @useparagon/cli
 
     - name: Authenticate into CLI
       env:
