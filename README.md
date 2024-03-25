@@ -37,12 +37,11 @@ jobs:
           projectId: ${{ inputs.projectId }}
           commitId: ${{ inputs.commitId }}
           paragonKey: ${{ secrets.PARAGON_CLI_KEY }}
-          npmToken: ${{ secrets.NPM_TOKEN }}
           paragonZeusUrl: ${{ secrets.ZEUS_URL }}
           paragonDashboardUrl: ${{ secrets.DASHBOARD_URL }}
 ```
 
-Make sure to replace ${{ secrets.PARAGON_CLI_KEY }}, ${{ secrets.NPM_TOKEN }}, ${{ secrets.ZEUS_URL }}, and ${{ secrets.DASHBOARD_URL }} with your actual secrets.
+Make sure to replace ${{ secrets.PARAGON_CLI_KEY }}, ${{ secrets.ZEUS_URL }}, and ${{ secrets.DASHBOARD_URL }} with your actual secrets.
 
 ## Inputs
 - projectId
