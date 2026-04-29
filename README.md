@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: pull
-        uses: useparagon/paragraph-pull@v1
+        uses: useparagon/paragraph-pull-action@v1
         with:
           projectId: ${{ inputs.projectId }}
           commitId: ${{ inputs.commitId }}
